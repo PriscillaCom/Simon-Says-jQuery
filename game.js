@@ -21,7 +21,7 @@ $(".btn").click(function() {
 
   if(comparePattern(userClickedPattern.length-1)) {
     level++;
-    $("h1").text("Level "+ level);
+    $("#level-title").text("Level "+ level);
 
     setTimeout(playPattern,1000);
 

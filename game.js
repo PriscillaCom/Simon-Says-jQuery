@@ -7,11 +7,9 @@ var level = 0;
 $(document).keypress(function(){
   if(hasStarted === 0){
     startOver();
-    $("h1").text("Level "+ level);
     nextSequence();
   }
-})
-
+});
 
 $(".btn").click(function() {
   var userChosenColor = $(this).attr("id");
@@ -21,12 +19,13 @@ $(".btn").click(function() {
 
   playSound(userChosenColor);
 
-  if(comparePattern(level)) {
+  if(comparePattern(userClickedPattern.length-1)) {
     level++;
     $("h1").text("Level "+ level);
-    setTimeout(nextSequence,1000);
 
-    // userClickedPattern = [];
+    setTimeout(playPattern,1000);
+
+    userClickedPattern = [];
   }
   else {
     setTimeout(
@@ -34,13 +33,22 @@ $(".btn").click(function() {
   }
 });
 
+function playPattern() {
+  for(let i = 0; i < gamePattern.length; ++i){
+    setTimeout(function(){
+      $("#" + gamePattern[i]).fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+      playSound(gamePattern[i]);
+    },500 * i);
+  }
+  setTimeout(nextSequence,500 * gamePattern.length);
+}
+
 function comparePattern(currentLevel) {
-  console.log("level: " + currentLevel);
-  console.log("gamePattern: " + gamePattern[currentLevel]);
-  console.log("userClickedPattern: " + userClickedPattern[currentLevel]);
+
   if(userClickedPattern[currentLevel] === gamePattern[currentLevel]){
-    console.log('same');
-    return true;
+
+    if(gamePattern.length === userClickedPattern.length)
+      return true;
   }
   else {
     playErrorSound();
@@ -90,4 +98,5 @@ function startOver(){
   gamePattern = [];
   userClickedPattern = [];
   hasStarted++;
+  $("h1").text("Level "+ level);
 }
